@@ -1,0 +1,30 @@
+// prisma/schema.prisma
+datasource db {
+    provider = "mysql"
+    url      = env("DB_URL")
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+model user {
+    id        Int      @id @default(autoincrement())
+    phone     String?  @unique
+    email     String?  @unique
+    password  String
+    role      Role     @default(user)
+    createdAt DateTime @default(now())
+    token     String?  @unique // 会话令牌字段
+    valid     Boolean  @default(true) // 令牌有效性字段
+
+    // ...
+    @@index([phone])
+    @@index([email])
+    @@index([createdAt])
+}
+
+enum Role {
+    ADMIN
+    user
+}
